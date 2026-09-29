@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* ===== 디자인 토큰 (Figma Variables) =====
+   @theme 에 정의한 변수는 그대로 Tailwind 유틸리티가 된다.
+   예) --color-navy  -> bg-navy / text-navy / border-navy
+       --text-lead   -> text-lead (font-size + line-height 동시 적용)
+       --container-page -> w-page / max-w-page                        */
+@theme {
+    /* 색 */
+    --color-navy: #1a283d;
+    --color-brand-red: #f02b2b;
+
+    /* 회색 계열: Tailwind 기본 zinc 스케일을 Figma 실제 값으로 고정 */
+    --color-zinc-900: #18181b;
+    --color-zinc-700: #3f3f46;
+    --color-zinc-600: #52525b;
+    --color-zinc-500: #71717a;
+    --color-zinc-400: #a1a1aa;
+    --color-zinc-300: #d4d4d8;
+    --color-zinc-200: #e4e4e7;
+    --color-zinc-100: #f4f4f5;
+    --color-zinc-50: #fafafa;
+
+    /* 댓글 영역 */
+    --color-brand-pink: #f54180; /* 좋아요 */
+    --color-cautionary: #ff9200; /* @멘션 */
+
+    /* 소셜 로그인 브랜드 색 */
+    --color-kakao: #fee500;
+    --color-naver: #03a94d;
+    --color-blue-dark: #1d242d;
+
+    /* 타이포: 크기 + 줄높이를 한 쌍으로 묶어 둔다 */
+    --text-body: 14px;
+    --text-body--line-height: 20px;
+    --text-sub: 16px;
+    --text-sub--line-height: 24px;
+    --text-lead: 18px;
+    --text-lead--line-height: 26px;
+    --text-tab: 20px;
+    --text-tab--line-height: 28px;
+    --text-title: 28px;
+    --text-title--line-height: 36px;
+    --text-heading: 32px;
+    --text-heading--line-height: 40px;
+
+    /* 레이아웃 */
+    --container-page: 1280px; /* 1920 - 좌우 320 */
+    --container-article: 680px; /* 콘텐츠 상세 본문 단 */
+    --container-sidebar: 252px; /* 좌측 사이드바 */
+    --container-modal: 568px; /* 로그인 모달 */
+
+    /* 헤더 높이: 사이드바 위치 계산에도 쓰이므로 토큰으로 묶어 둔다 */
+    --spacing-header: 72px;
+    --spacing-mento: 104px; /* 멘토 헤더 높이 */
+    --spacing-dot: 3px; /* 메타 정보 사이 구분 점 */
+
+    --font-sans:
+        "Freesentation", "Pretendard", -apple-system, BlinkMacSystemFont,
+        "malgun gothic", "맑은 고딕", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== 전역 기본값 ===== */
+body {
+    min-width: 1360px;
+    background-color: #fff;
+    color: var(--color-zinc-900);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: -0.02em; /* Figma letterSpacing -2% */
+}
