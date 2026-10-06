@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   폰트 적용 방법 ① CDN (@import 버전)
+   ----------------------------------------------------------------------------
+   아래 한 줄 주석만 풀면 끝. 설치/업로드 없이 바로 쓸 수 있다.
+   단 CSS 안의 @import 는 "globals.css 를 받아서 파싱한 뒤에야" 폰트 CSS 를
+   요청하고, 그 CSS 를 파싱한 뒤에야 woff2 를 요청한다 → 요청 3단 직렬.
+   그래서 셋 중 제일 느리다. CDN 을 쓸 거면 app/layout.tsx 의 <link> 버전을 쓰자.
+
+   @main 은 브랜치라서 폰트가 바뀌면 사이트도 같이 바뀐다.
+   실무라면 커밋 SHA 로 고정할 것:
+   @98f6b841fca55a23fbb0f9eb91acda0e16a676ea
+   ========================================================================== */
+/* @import url("https://cdn.jsdelivr.net/gh/Freesentation/freesentation@main/Freesentation.css"); */
+
+
 /* ===== 디자인 토큰 (Figma Variables) =====
    @theme 에 정의한 변수는 그대로 Tailwind 유틸리티가 된다.
    예) --color-navy  -> bg-navy / text-navy / border-navy
@@ -55,9 +70,13 @@
     --spacing-mento: 104px; /* 멘토 헤더 높이 */
     --spacing-dot: 3px; /* 메타 정보 사이 구분 점 */
 
+    /* --font-freesentation 는 next/font/local(방법 ②)이 만들어 주는 변수.
+       방법 ①/③ 으로 바꿔 끼면 변수가 없으므로 폴백인 "Freesentation" 이름이 쓰인다.
+       → 세 방법 어느 쪽을 켜도 이 한 줄은 고칠 필요가 없다. */
     --font-sans:
-        "Freesentation", "Pretendard", -apple-system, BlinkMacSystemFont,
-        "malgun gothic", "맑은 고딕", "Helvetica Neue", Arial, sans-serif;
+        var(--font-freesentation, "Freesentation"), "Pretendard", -apple-system,
+        BlinkMacSystemFont, "malgun gothic", "맑은 고딕", "Helvetica Neue", Arial,
+        sans-serif;
 }
 
 /* ===== 전역 기본값 ===== */
@@ -69,4 +88,56 @@ body {
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
     letter-spacing: -0.02em; /* Figma letterSpacing -2% */
+}
+
+/* ============================================================================
+   폰트 적용 방법 ③ 자체 업로드 (@font-face 직접 선언)
+   ----------------------------------------------------------------------------
+   public/fonts/ 에 올린 woff2 를 직접 가리킨다.
+   public/ 안의 파일은 "public 을 뺀 경로"로 접근한다 → /fonts/xxx.woff2
+   (지금 이미지들이 /images/logo.svg 로 쓰이는 것과 같은 규칙)
+
+   방법 ②를 끄고(app/layout.tsx 의 className + import 제거) 아래 주석을 풀면 된다.
+   방법 ②와 달리 파일명에 해시가 안 붙어서 캐시를 길게 못 걸고,
+   size-adjust 폴백 메트릭도 직접 계산해 넣어야 한다.
+   ========================================================================== */
+/*
+@font-face {
+    font-family: "Freesentation";
+    src: url("/fonts/Freesentation-4Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Freesentation";
+    src: url("/fonts/Freesentation-5Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Freesentation";
+    src: url("/fonts/Freesentation-6SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Freesentation";
+    src: url("/fonts/Freesentation-7Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+*/
+
+/* ===== 스크롤바 자리 고정 =====
+   모달이 열리면 body 의 스크롤을 잠그는데(overflow: hidden),
+   그 순간 세로 스크롤바가 사라지면서 페이지 전체가 스크롤바 폭(≈15px)만큼
+   오른쪽으로 밀린다. 스크롤바 자리를 항상 비워 두면 밀림이 아예 생기지 않는다.
+   Chrome 94+ / Firefox 97+ / Safari 18.2+ 지원.
+   미지원 브라우저는 LoginModal 에서 padding 으로 보정한다.                      */
+html {
+    scrollbar-gutter: stable;
 }

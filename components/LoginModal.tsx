@@ -31,14 +31,32 @@ export default function LoginModal({ data, open, onClose }: Props) {
         };
         document.addEventListener("keydown", onKeyDown);
 
+        // 뒤쪽 페이지 스크롤 잠그기.
+        // 잠그는 순간 스크롤바가 사라져 페이지가 오른쪽으로 밀리는데,
+        // globals.css 의 html { scrollbar-gutter: stable } 이 스크롤바 자리를
+        // 항상 비워 두므로 밀리지 않는다.
+        // scrollbar-gutter 를 모르는 구형 브라우저만 padding 으로 직접 보정한다.
+        const supportsGutter =
+            typeof CSS !== "undefined" &&
+            CSS.supports?.("scrollbar-gutter", "stable");
+        // 창 전체 폭 - 콘텐츠 폭 = 스크롤바 폭 (macOS 오버레이 스크롤바면 0)
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
+
         const previousOverflow = document.body.style.overflow;
+        const previousPaddingRight = document.body.style.paddingRight;
+
         document.body.style.overflow = "hidden";
+        if (!supportsGutter && scrollbarWidth > 0) {
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
 
         idInputRef.current?.focus();
 
         return () => {
             document.removeEventListener("keydown", onKeyDown);
             document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
         };
     }, [open, onClose]);
 
